@@ -8,13 +8,13 @@ BASE_URL = "https://dictionary.cambridge.org/dictionary/english/"
 
 class Fetcher:
     def __init__(self, user_agent=None) -> None:
-        self.__url = BASE_URL
+        self.url = BASE_URL
         self.user_agent = user_agent if user_agent else UserAgent().random
         self.html_content = ""
 
     def get_word_page(self, word: str) -> Response:
         # It makes a http get request to the cambridge dictionary to parse the html doc later on.
-        endpoint = self.__url + word
+        endpoint = self.url + word
         headers = {
             "User-Agent": self.user_agent,
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",

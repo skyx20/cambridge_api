@@ -16,7 +16,7 @@ class Parser(BeautifulSoup):
         """
         It iteraits through the html page to find every concept by part of speech
         and guide words
-        returns: Word object
+        returns: Word object or None
         """
         if self.dict_variant is not None:
             word = Word(self._extract_word())
@@ -40,9 +40,11 @@ class Parser(BeautifulSoup):
                         """
                         cerf_level = self._extract_cerf_level(current_block)
                         definition = self._extract_def(current_block)
-                        examples = self._extract_example(current_block)
+                        examples = self._extract_examples(current_block)
                         gw.add_meaning(cerf_level, definition, examples)
             return word
+        else: 
+            raise ValueError("You need to select a dict variant befor parsing the meanings")
         return None
     
     
@@ -100,7 +102,7 @@ class Parser(BeautifulSoup):
         "get audio pronuncation from US or UK"
         ...
 
-    def _extract_example(self, def_block:Tag)-> list[str]: 
+    def _extract_examples(self, def_block:Tag)-> list[str]: 
         "get every single example in the definition block"
         " iterates every example tag found and get the text from them"
         examples = [

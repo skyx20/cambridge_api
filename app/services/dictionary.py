@@ -5,8 +5,11 @@ from typing import Literal
 from requests.exceptions import ConnectionError
 
 class Dictionary:
-    "Search in the dict by words variants like uk, us, or bussines"
-    "default: uk."
+    """
+    Handles the coordinations of fetching + parsing
+    Search words by dictionary variants like uk, us, or bussines
+    default: uk.
+    """
     def __init__(self, variant:Literal["uk", "us", "be"]='uk'):
         self.variant = variant
         self._parser = None
