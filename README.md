@@ -33,6 +33,7 @@ for more information on how to use the docs, see the official [FastAPI Docs](htt
 <br>
 
 ### Json pattern
+This patter comes from a Word data model, Each Word is represented as a nested object with the following structure:
 
 ```python
 {
