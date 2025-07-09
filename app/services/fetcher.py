@@ -41,7 +41,7 @@ class Fetcher:
                 raise req.exceptions.HTTPError('word not found')
             self.html_content = resp.text
             # Using a util to save the pages for testing porpose
-            # save_page(word, resp)
+            save_page(word, resp)
             return resp
 
 

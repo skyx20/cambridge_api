@@ -23,6 +23,7 @@ class Dictionary:
         try:
             resp = self._bridge.get_word_page(word)
         except ConnectionError as e:
+            print('from dict.search_meaning', e)
             return e
         else:
             self._parser = Parser(resp.text)
@@ -42,3 +43,7 @@ class Dictionary:
     def __repr__(self):
         return f'{self.__class__.__name__}({self.variant})'
 
+
+if __name__ == '__main__':
+    d = Dictionary()
+    d.search_meaning()

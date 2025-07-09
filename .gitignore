@@ -3,3 +3,4 @@ __pycache__/
 .vscode/
 */saved_pages
 /venv
+app/data/saved_pages/

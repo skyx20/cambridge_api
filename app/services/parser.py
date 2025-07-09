@@ -87,7 +87,8 @@ class Parser(BeautifulSoup):
 
     def _find_def_by_gw(self, pos_block:Tag) -> ResultSet[Tag] | list: 
         "it extracts all definitions by guide word"
-        defs_by_gw = pos_block.find('div', class_=['pos-body']).find_all('div', class_='pr dsense')
+        "A word may not have a guide word, so the dsens-noh is used to get those words"
+        defs_by_gw = pos_block.find('div', class_=['pos-body']).find_all('div', class_=['pr dsense', 'dsense-noh'])
         return defs_by_gw if defs_by_gw else defs_by_gw
 
 
@@ -118,7 +119,10 @@ class Parser(BeautifulSoup):
 
     def _extract_guide_word(self, pos_block:ResultSet) -> str | None:
         # Guide word: helps you find the right meaning when a word has more than one meaning
-        guide_word = pos_block.find("span", class_="guideword dsense_gw").find("span")
+        guide_word = pos_block.find("span", class_="guideword dsense_gw")
+        if guide_word:
+            "A word may not have a word guide and got only the meaning"
+            guide_word = guide_word.find("span")
         return guide_word.text if guide_word else guide_word
 
     def _extract_related_words(
