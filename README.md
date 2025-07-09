@@ -25,9 +25,11 @@ _supports only mono dictionary for now..._
 
 if you want to know how the api works and the data it retrieves, FastAPI provide an interactive api documentation, just run the app and go to the default api docs link: `http://127.0.0.1:8000/docs`. Or look for it in the console if you have that port unavailable.
 for more information on how to use the docs, see the official [FastAPI Docs](https://fastapi.tiangolo.com/tutorial/first-steps/#interactive-api-docs)
-<img src="./app/assets/images/fastapi-docs.png" width="300"/>
 
-<!-- ![fastApi Docs Image](./app/assets/images/fastapi-docs.png) -->
+<p align="center">
+  <img src="./app/assets/images/fastapi-docs.png" width="450"/>
+<p>
+
 <br>
 
 ### Json pattern
@@ -87,11 +89,14 @@ Example:
     }]
 }
 ```
+
 ### To-do:
+
 - [ ] Add support for Audio pronunciation and IPA
 - [ ] Add support for translations
 
 ### Known Issues
+
 - [ ] The api can return whatever internal exepction is raised,
 
 ### Contribute
