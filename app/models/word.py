@@ -90,7 +90,7 @@ class Word:
     def __init__(self, word: str):
         self.word = word if word else ""
         self.meanings:list[PartOfSpeech] = []
-        self._audio_pronunciations = None
+        self.audios = None
         self._related_words = None
         self._synonyms = None
         # self._translation = None
@@ -101,8 +101,8 @@ class Word:
     def to_dict(self) -> dict:
         return {
             "word": self.word,
-            "pronunciation": self._IPA,
-            "audios_pronunciation": self._audio_pronunciations,
+            "ipa": self._IPA,
+            "audios": self.audios,
             "meanings": [pos.to_dict() for pos in self.meanings]
         }
     
@@ -119,7 +119,7 @@ class Word:
         return self.meanings
 
     def get_pronunciations(self) -> str | None:
-        return self._audio_pronunciations
+        return self.audios
 
     def get_related_words(self) -> str | None:
         return self._related_words

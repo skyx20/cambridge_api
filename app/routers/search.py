@@ -8,9 +8,9 @@ router = APIRouter(
     tags=["search"]
 )
 
-@router.get("/{word}",)
-async def search_word(word: str):
-    d = Dictionary()
+@router.get("/{word}/",)
+async def search_word(word: str, dict_variant='uk'):
+    d = Dictionary(dict_variant)
     try:
         w = d.search_meaning(word)
     except Exception as e:
