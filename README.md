@@ -4,7 +4,7 @@
 
 ### Overview
 
-This project is a Python-based program that extracts word meanings, guide words, and usage examples from the Cambridge Dictionary. Wrapped in FastAPI, it exposes the data as a JSON API. The core of the program uses requests for HTTP handling, BeautifulSoup for HTML parsing, and structured Word objects for clean data management. it was built as part of a chrome extension, another front-end project for quick access to the meanings. Check it out here: [Building]()
+This project is a Python-based program that extracts word meanings, guide words, and usage examples from the Cambridge Dictionary. Wrapped in FastAPI, it exposes the data as a JSON API. The core of the program uses requests for HTTP handling, BeautifulSoup for HTML parsing, and structured Word objects for clean data management. it was built as part of a chrome extension, another front-end project for quick access to the meanings. Check it out here: [Dictionary extension](https://github.com/skyx20/dictionary-extension)
 
 _supports only mono dictionary for now..._
 
@@ -24,7 +24,7 @@ _supports only mono dictionary for now..._
 ### API
 
 if you want to know how the api works and the data it retrieves, FastAPI provide an interactive api documentation, just run the app and go to the default api docs link: `http://127.0.0.1:8000/docs`. Or look for it in the console if you have that port unavailable.
-for more information on how to use the docs, see the official [FastAPI Docs](https://fastapi.tiangolo.com/tutorial/first-steps/#interactive-api-docs)
+For more information on how to use the docs, see the official [FastAPI Docs](https://fastapi.tiangolo.com/tutorial/first-steps/#interactive-api-docs)
 
 <p align="center">
   <img src="./app/assets/images/fastapi-docs.png" width="450"/>
@@ -33,23 +33,25 @@ for more information on how to use the docs, see the official [FastAPI Docs](htt
 <br>
 
 ### Json pattern
+
 This patter comes from a Word data model, Each Word is represented as a nested object with the following structure:
 
 ```python
 {
   "word": "word",
-  "ipa": null,
-  "audios": null,
+  "ipas": {},
+  "audio_links": {},
+  "origin": "origin",
   "meanings": [
     {
-      "posType": "posType", #if a word isn't part of a guide word, this would be null
+      "posType": "posType",
       "guideWordDefs": [
         {
-          "guideWord": "guideWord",
+          "guideWord": "guideWord", #if a word isn't part of a guide word, this would be null
           "meanings": [
             {
               "definition": "definition",
-              "cerfLevel": "cerfLevel",
+              "cerfLevel": "cerfLevel", # Could be null if not found
               "examples": [
                 "Some examples"
               ]
@@ -66,8 +68,15 @@ Example:
 ```python
 {
   "word": "mind",
-  "ipa": null,
-  "audios": null,
+  "ipa": {
+    "uk": "maɪnd",
+    "us": "maɪnd"
+  },,
+  "audio_links": {
+    "uk": "https://dictionary.cambridge.org/media/english/uk_pron/u/ukm/ukmil/ukmilli027.mp3",
+    "us": "https://dictionary.cambridge.org/media/english/us_pron/m/min/mind_/mind.mp3"
+  },
+  "origin": "uk",
   "meanings": [
     {
       "posType": "noun",
@@ -93,8 +102,9 @@ Example:
 
 ### To-do:
 
-- [ ] Add support for Audio pronunciation and IPA
+- [x] Add support for Audio pronunciation and IPA
 - [ ] Add support for translations
+- [ ] Add support for related words
 
 ### Known Issues
 

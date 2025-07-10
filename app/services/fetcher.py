@@ -5,7 +5,6 @@ from fake_useragent import UserAgent
 
 
 BASE_URL = "https://dictionary.cambridge.org/dictionary/english/"
-
 class Fetcher:
     def __init__(self, user_agent=None) -> None:
         self.url = BASE_URL
@@ -40,8 +39,8 @@ class Fetcher:
             if resp.url == BASE_URL:
                 raise req.exceptions.HTTPError('word not found')
             self.html_content = resp.text
-            # Using a util to save the pages for testing porpose
-            save_page(word, resp)
+            # Using a util to save the pages for testing purpose
+            # save_page(word, resp)
             return resp
 
 

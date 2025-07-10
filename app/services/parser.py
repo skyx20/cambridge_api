@@ -2,15 +2,17 @@ from bs4 import BeautifulSoup, Tag, ResultSet
 from bs4.element import NavigableString
 from app.models.word import Word
 from typing import Literal
+from .fetcher import BASE_URL
+
 
 class Parser(BeautifulSoup):
-
 
     def __init__(self, word_page: str):
         super().__init__()
         self.sp_page = BeautifulSoup(word_page, "html.parser")
         self.dict_variant = None
-
+        self._BASE_DOMAIN = BASE_URL.rsplit('/', maxsplit=3)[0]
+        self._dict_type = None
 
     def parse_meanings(self) -> Word | None:
         """
@@ -20,12 +22,22 @@ class Parser(BeautifulSoup):
         """
         if self.dict_variant is not None:
             word = Word(self._extract_word())
+            word.add_origin(self._dict_type)
             "A word can be owned by differents pos, need to get all of them"
             all_pos_block = self._extract_pos_blocks()
             for pos_block in all_pos_block:
-                "Each pos has its definitions by a guide word"
+                "Each pos has its definitions by a guide word..."
+                "couldn't have a guide word tho, depends on the word"
                 pos = word.add_part_of_speech(self._extract_POS(pos_block))
-
+                if not self._dict_type == 'us': 
+                    audio_uk = self._extract_audio('uk' ,pos_block)
+                    word.add_audio_link('uk', audio_link=audio_uk)
+                    ipa_uk = self._extract_ipa('uk', pos_block)
+                    word.add_IPA('uk', ipa=ipa_uk)
+                audio_us = self._extract_audio('us', pos_block)
+                word.add_audio_link('us', audio_link=audio_us)
+                ipa_us = self._extract_ipa('us', pos_block)
+                word.add_IPA('us', ipa=ipa_us)
                 defs_by_gw = self._find_def_by_gw(pos_block)
 
                 for def_by_gw in defs_by_gw:
@@ -47,6 +59,15 @@ class Parser(BeautifulSoup):
             raise ValueError("You need to select a dict variant befor parsing the meanings")
         return None
     
+    def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str:
+        source = pos_block.find('span', class_=f"{country} dpron-i").find('source', {'type':'audio/mpeg'})
+        audio_link = self._BASE_DOMAIN + source.get('src')
+        return audio_link
+
+    def _extract_ipa(self, country, pos_block:Tag)-> str:
+        country_ipa = pos_block.find('span', class_=f"{country} dpron-i").find('span', class_="ipa")
+        
+        return country_ipa.text if country_ipa else country_ipa 
     
     def get_all_def_blocks(self, def_by_wg:Tag) -> ResultSet[Tag | NavigableString] | list:
         every_def = def_by_wg.find_all('div', class_="def-block ddef_block")
@@ -71,12 +92,19 @@ class Parser(BeautifulSoup):
 
         if not self.dict_variant:
             raise ValueError("The selected dictionary variant is not available for this word")
+
+        self._dict_type = dict_type
         return 
 
 
     def _extract_def(self, def_block:Tag) -> str | None:
+        f_definition = None
         definition = def_block.find("div", class_='def ddef_d db')
-        f_definition = definition.text.strip()[:-1]
+        if ref := definition.find('a', class_="Ref"):
+            "A definition can be a link to another page, it would extract the text, not all the unecessary characther"
+            f_definition = ref.text
+        else:
+            f_definition = definition.text.strip()[:-1]
         return f_definition if definition else definition
 
 
@@ -97,12 +125,6 @@ class Parser(BeautifulSoup):
         word = self.sp_page.find('span', class_='hw dhw')
         return word.text.strip().lower() if word else word
         
-    def _extract_audio_pronunciation(
-        self,
-    ):
-        "get audio pronuncation from US or UK"
-        ...
-
     def _extract_examples(self, def_block:Tag)-> list[str]: 
         "get every single example in the definition block"
         " iterates every example tag found and get the text from them"

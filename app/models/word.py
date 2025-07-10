@@ -1,4 +1,6 @@
+from email.mime import audio
 import json
+from typing import Literal
 
 
 class Meaning:
@@ -89,20 +91,36 @@ class Word:
     """
     def __init__(self, word: str):
         self.word = word if word else ""
+        self._origin = ""
         self.meanings:list[PartOfSpeech] = []
-        self.audios = None
+        self._audios:dict = {}
         self._related_words = None
         self._synonyms = None
         # self._translation = None
         self._tenses = None
         self._sense_domain = None
-        self._IPA = None
+        self._IPAS:dict = {}
     
+        
+
+    def get_meanings(self) -> list:
+        return self.meanings
+
+    def get_related_words(self) -> str | None:
+        return self._related_words
+
+    def get_synonyms(self) -> str | None:
+        return self._synonyms
+
+    def get_IPAS(self) -> dict:
+        return self._IPAS
+
     def to_dict(self) -> dict:
         return {
             "word": self.word,
-            "ipa": self._IPA,
-            "audios": self.audios,
+            "ipas": self._IPAS,
+            "audio_links": self._audios,
+            "origin": self._origin,
             "meanings": [pos.to_dict() for pos in self.meanings]
         }
     
@@ -114,28 +132,23 @@ class Word:
         new_pos = PartOfSpeech(name)
         self.meanings.append(new_pos)
         return new_pos
+    
+    def add_audio_link(self, country:Literal['uk', 'us'], audio_link:str):
+        self._audios.setdefault(country, country) 
+        self._audios[country] = audio_link
+        return self._audios
+    
+    def add_IPA(self, country:Literal['uk', 'us'], ipa:str):
+        self._IPAS.setdefault(country, country) 
+        self._IPAS[country] = ipa
+        return self._IPAS
 
-    def get_meanings(self) -> list:
-        return self.meanings
-
-    def get_pronunciations(self) -> str | None:
-        return self.audios
-
-    def get_related_words(self) -> str | None:
-        return self._related_words
-
-    def get_synonyms(self) -> str | None:
-        return self._synonyms
-
-    # def get_translation(self) -> str | None:
-    #     return self._translation
-
-    def get_IPA(self) -> str | None:
-        return self._IPA
+    def add_origin(self, origin:Literal['uk', 'us', 'be']):
+        self._origin = origin if not origin == 'be' else 'business'
 
     def __str__(self):
         return f'{self.word} {self.meanings[0].__str__() if self.meanings else "PartOfSpeech"}'
 
     def __repr__(self):
-        return f'{self.__class__.__name__}({self.word})-> \n{" "*2}{self.meanings[0].__repr__() if self._meanings else "[]"}'
+        return f'{self.__class__.__name__}({self.word}) \n{" "*2}{self.meanings[0].__repr__() if self.meanings else "[]"}'
 
