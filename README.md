@@ -68,7 +68,7 @@ Example:
 ```python
 {
   "word": "mind",
-  "ipa": {
+  "ipas": {
     "uk": "maɪnd",
     "us": "maɪnd"
   },,
