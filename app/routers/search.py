@@ -2,6 +2,7 @@ from fastapi import APIRouter
 from app.services.dictionary import Dictionary
 from fastapi.responses import JSONResponse 
 from fastapi.exceptions import HTTPException 
+from typing import Literal
 
 router = APIRouter(
     prefix="/search",
@@ -9,7 +10,7 @@ router = APIRouter(
 )
 
 @router.get("/{word}/{dict_variant}/",)
-async def search_word(word: str, dict_variant:str='uk'):
+async def search_word(word: str, dict_variant:Literal['uk', 'us', 'be']):
     d = Dictionary(dict_variant)
     try:
         w = d.search_meaning(word)
