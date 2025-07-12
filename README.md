@@ -104,7 +104,6 @@ Example:
 
 - [x] Add support for Audio pronunciation and IPA
 - [ ] Add support for translations
-- [ ] Add support for related words
 
 ### Known Issues
 
