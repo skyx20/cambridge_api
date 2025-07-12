@@ -9,7 +9,7 @@ router = APIRouter(
     tags=["search"]
 )
 
-@router.get("/{word}/{dict_variant}/",)
+@router.get("/{word}/{dict_variant}",)
 async def search_word(word: str, dict_variant:Literal['uk', 'us', 'be']):
     d = Dictionary(dict_variant)
     try:
