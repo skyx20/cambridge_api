@@ -8,8 +8,8 @@ router = APIRouter(
     tags=["search"]
 )
 
-@router.get("/{word}/",)
-async def search_word(word: str, dict_variant='uk'):
+@router.get("/{word}/{dict_variant}/",)
+async def search_word(word: str, dict_variant:str='uk'):
     d = Dictionary(dict_variant)
     try:
         w = d.search_meaning(word)

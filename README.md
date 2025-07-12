@@ -71,7 +71,7 @@ Example:
   "ipas": {
     "uk": "maɪnd",
     "us": "maɪnd"
-  },,
+  },
   "audio_links": {
     "uk": "https://dictionary.cambridge.org/media/english/uk_pron/u/ukm/ukmil/ukmilli027.mp3",
     "us": "https://dictionary.cambridge.org/media/english/us_pron/m/min/mind_/mind.mp3"
