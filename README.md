@@ -23,7 +23,7 @@ _supports only mono dictionary for now..._
 
 ### API
 
-if you want to know how the api works and the data it retrieves, FastAPI provide an interactive api documentation, just run the app and go to the default api docs link: `http://127.0.0.1:8000/docs`. Or look for it in the console if you have that port unavailable.
+If you want to know how the API works and what data it retrieves, FastAPI provide an interactive api documentation, just run the app and go to the default api docs link: `http://127.0.0.1:8000/docs`. Or look for it in the console if you have that port unavailable.
 For more information on how to use the docs, see the official [FastAPI Docs](https://fastapi.tiangolo.com/tutorial/first-steps/#interactive-api-docs)
 
 <p align="center">
@@ -112,7 +112,7 @@ This project is not intended for commercial use, and I will not be held responsi
 
 ### Known Issues
 
-- [ ] The api can return whatever internal exepction is raised,
+- [ ] The api can return whatever internal exepction is raised.
 
 ### Contribute
 

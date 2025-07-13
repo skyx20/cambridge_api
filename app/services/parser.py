@@ -5,11 +5,15 @@ from typing import Literal
 from .fetcher import BASE_URL
 
 
-class Parser(BeautifulSoup):
+class Parser():
 
     def __init__(self, word_page: str):
-        super().__init__()
-        self.sp_page = BeautifulSoup(word_page, "html.parser")
+        """
+        Specialized parser for cambridge
+
+        param word_page: a string of a html page
+        """
+        self.sp_page = BeautifulSoup(word_page, "html.parser",)
         self.dict_variant = None
         self._BASE_DOMAIN = BASE_URL.rsplit('/', maxsplit=3)[0]
         self._dict_type = None
@@ -18,7 +22,7 @@ class Parser(BeautifulSoup):
         """
         It iteraits through the html page to find every concept by part of speech
         and guide words
-        returns: Word object or None
+        returns: Word object or raise an error
         """
         if self.dict_variant is not None:
             word = Word(self._extract_word())
@@ -43,7 +47,7 @@ class Parser(BeautifulSoup):
                 for def_by_gw in defs_by_gw:
                     "Each guide_word may have several meanings too"
                     guide_word = self._extract_guide_word(def_by_gw)
-                    def_blocks  = self.get_all_def_blocks(def_by_gw)
+                    def_blocks  = self._get_all_def_blocks(def_by_gw)
                     gw = pos.add_guide_word(label=guide_word)
                     for current_block in def_blocks:
                         """
@@ -57,7 +61,6 @@ class Parser(BeautifulSoup):
             return word
         else: 
             raise ValueError("You need to select a dict variant befor parsing the meanings")
-        return None
     
     def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str:
         source = pos_block.find('span', class_=f"{country} dpron-i").find('source', {'type':'audio/mpeg'})
@@ -69,7 +72,7 @@ class Parser(BeautifulSoup):
         
         return country_ipa.text if country_ipa else country_ipa 
     
-    def get_all_def_blocks(self, def_by_wg:Tag) -> ResultSet[Tag | NavigableString] | list:
+    def _get_all_def_blocks(self, def_by_wg:Tag) -> ResultSet[Tag | NavigableString] | list:
         every_def = def_by_wg.find_all('div', class_="def-block ddef_block")
         return every_def
     
@@ -86,6 +89,7 @@ class Parser(BeautifulSoup):
         if dict_type == "uk":
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cald4'})
         elif dict_type == "us":
+            self.dict_variant = self.find('div', {'data-id': 'cacd'})
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cacd'})
         elif dict_type == "be":
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cbed'})
