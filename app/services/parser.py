@@ -8,11 +8,7 @@ from .fetcher import BASE_URL
 class Parser():
 
     def __init__(self, word_page: str):
-        """
-        Specialized parser for cambridge
 
-        param word_page: a string of a html page
-        """
         self.sp_page = BeautifulSoup(word_page, "html.parser",)
         self.dict_variant = None
         self._BASE_DOMAIN = BASE_URL.rsplit('/', maxsplit=3)[0]
@@ -60,7 +56,7 @@ class Parser():
                         gw.add_meaning(cerf_level, definition, examples)
             return word
         else: 
-            raise ValueError("You need to select a dict variant befor parsing the meanings")
+            raise ValueError("You need to select a dict variant before parsing the meanings")
     
     def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str:
         source = pos_block.find('span', class_=f"{country} dpron-i").find('source', {'type':'audio/mpeg'})
