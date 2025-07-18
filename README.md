@@ -47,7 +47,7 @@ This patter comes from a Word data model, Each Word is represented as a nested o
       "posType": "posType",
       "guideWordDefs": [
         {
-          "guideWord": "guideWord", #if a word isn't part of a guide word, this would be null
+          "guideWord": "guideWord", #if a definition isn't part of a guide word, this would be null
           "meanings": [
             {
               "definition": "definition",

@@ -6,7 +6,9 @@ from fastapi.responses import RedirectResponse
 from .routers import search
 
 
-app = FastAPI()
+app = FastAPI(
+    debug=True,
+    )
 app.include_router(search.router)
 
 
