@@ -1,3 +1,4 @@
+from sys import addaudithook
 from bs4 import BeautifulSoup, Tag, ResultSet
 from bs4.element import NavigableString
 from app.models.word import Word
@@ -31,13 +32,14 @@ class Parser():
                 pos = word.add_part_of_speech(self._extract_POS(pos_block))
                 if not self._dict_type == 'us': 
                     audio_uk = self._extract_audio('uk' ,pos_block)
-                    word.add_audio_link('uk', audio_link=audio_uk)
                     ipa_uk = self._extract_ipa('uk', pos_block)
-                    word.add_IPA('uk', ipa=ipa_uk)
+                    word.add_audio_link('uk', audio_link=audio_uk) if audio_uk else None
+                    word.add_IPA('uk', ipa=ipa_uk) if ipa_uk else None
+
                 audio_us = self._extract_audio('us', pos_block)
-                word.add_audio_link('us', audio_link=audio_us)
                 ipa_us = self._extract_ipa('us', pos_block)
-                word.add_IPA('us', ipa=ipa_us)
+                word.add_audio_link('us', audio_link=audio_us) if audio_us else None
+                word.add_IPA('us', ipa=ipa_us) if ipa_us else None
                 defs_by_gw = self._find_def_by_gw(pos_block)
 
                 for def_by_gw in defs_by_gw:

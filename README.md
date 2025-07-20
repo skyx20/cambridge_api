@@ -40,18 +40,18 @@ This patter comes from a Word data model, Each Word is represented as a nested o
 {
   "word": "word",
   "ipas": {},
-  "audio_links": {},
+  "audio_links": {"uk" | None : 'url', "us" | None: "url" } ,
   "origin": "origin",
   "meanings": [
     {
       "posType": "posType",
       "guideWordDefs": [
         {
-          "guideWord": "guideWord", #if a definition isn't part of a guide word, this would be null
+          "guideWord": "guideWord" | None,
           "meanings": [
             {
               "definition": "definition",
-              "cerfLevel": "cerfLevel", # Could be null if not found
+              "cerfLevel": "cerfLevel" | None,
               "examples": [
                 "Some examples"
               ]
@@ -99,6 +99,7 @@ Example:
     }]
 }
 ```
+
 ### Disclaimer
 
 The dictionary data provide by this project is sourced from a publicly available online dictionary. All data provided by this api is for non-profit personal or educational purposes and is intended for reference and learning purposes only. I do not claim ownership of the data nor do I guarantee its accuracy or completeness.
@@ -117,4 +118,3 @@ This project is not intended for commercial use, and I will not be held responsi
 ### Contribute
 
 If you want contribute to this repo, just make a new fork or open a new issue to let me know.
-
