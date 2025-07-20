@@ -60,8 +60,7 @@ class Parser():
     
     def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str:
         source = pos_block.find('span', class_=f"{country} dpron-i").find('source', {'type':'audio/mpeg'})
-        audio_link = self._BASE_DOMAIN + source.get('src')
-        return audio_link
+        return self._BASE_DOMAIN + source.get('src') if source else source
 
     def _extract_ipa(self, country, pos_block:Tag)-> str:
         country_ipa = pos_block.find('span', class_=f"{country} dpron-i").find('span', class_="ipa")
@@ -85,7 +84,6 @@ class Parser():
         if dict_type == "uk":
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cald4'})
         elif dict_type == "us":
-            self.dict_variant = self.find('div', {'data-id': 'cacd'})
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cacd'})
         elif dict_type == "be":
             self.dict_variant = self.sp_page.find('div', {'data-id': 'cbed'})
