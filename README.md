@@ -39,8 +39,14 @@ This patter comes from a Word data model, Each Word is represented as a nested o
 ```python
 {
   "word": "word",
-  "ipas": {},
-  "audio_links": {"uk" | None : 'url', "us" | None: "url" } ,
+  "ipas": {
+    "uk" : "ipa" | None,
+    "us": "ipa" | None
+    },
+  "audio_links": {
+    "uk" : "url"| None,
+    "us": "url" | None
+    } ,
   "origin": "origin",
   "meanings": [
     {
