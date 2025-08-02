@@ -1,4 +1,3 @@
-from sys import addaudithook
 from bs4 import BeautifulSoup, Tag, ResultSet
 from bs4.element import NavigableString
 from app.models.word import Word
@@ -60,14 +59,18 @@ class Parser():
         else: 
             raise ValueError("You need to select a dict variant before parsing the meanings")
     
-    def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str:
-        source = pos_block.find('span', class_=f"{country} dpron-i").find('source', {'type':'audio/mpeg'})
-        return self._BASE_DOMAIN + source.get('src') if source else source
+    def _extract_audio(self, country:Literal['us', 'uk'], pos_block:Tag)-> str | None:
+        source=None
+        hasAudio = pos_block.find('span', class_=f"{country} dpron-i")
+        if hasAudio:
+            source = hasAudio.find('source', {'type':'audio/mpeg'})
+        return self._BASE_DOMAIN + source.get('src') if source else hasAudio
 
-    def _extract_ipa(self, country, pos_block:Tag)-> str:
-        country_ipa = pos_block.find('span', class_=f"{country} dpron-i").find('span', class_="ipa")
+    def _extract_ipa(self, country, pos_block:Tag)-> str | None:
+        has_ipa = pos_block.find('span', class_=f"{country} dpron-i")
+        "return the text if the ipa block is found else is None"
+        return has_ipa.find('span', class_="ipa").text if has_ipa else None
         
-        return country_ipa.text if country_ipa else country_ipa 
     
     def _get_all_def_blocks(self, def_by_wg:Tag) -> ResultSet[Tag | NavigableString] | list:
         every_def = def_by_wg.find_all('div', class_="def-block ddef_block")
@@ -102,10 +105,14 @@ class Parser():
         definition = def_block.find("div", class_='def ddef_d db')
         if ref := definition.find('a', class_="Ref"):
             "A definition can be a link to another page, it would extract the text, not all the unecessary characther"
+            
             f_definition = ref.text
         else:
-            f_definition = definition.text.strip()[:-1]
-        return f_definition if definition else definition
+            f_definition =  definition.text.strip()
+
+        if usage := def_block.find('span', class_="usage dusage"):
+            f_definition = f"{usage.text} {f_definition}"
+        return f_definition 
 
 
     def _extract_pos_blocks(self,) -> ResultSet[Tag] | list:
@@ -125,15 +132,24 @@ class Parser():
         word = self.sp_page.find('span', class_='hw dhw')
         return word.text.strip().lower() if word else word
         
-    def _extract_examples(self, def_block:Tag)-> list[str]: 
+    def _extract_examples(self, def_block:Tag)-> list[str] | list[None]: 
         "get every single example in the definition block"
         " iterates every example tag found and get the text from them"
+        examples = []
         examples = [
             example.text.strip()
             for example in def_block.find_all('span', class_=["eg", "deg"])
             if example
             ]
-        return examples
+        if not examples:
+            "Try to find and get examples from the accordion section if available on the parent block"
+            examples = [
+            example.text.strip()
+            for example in def_block.parent.find_all("li", class_="eg dexamp hax")
+            if example]
+
+        return examples if examples else examples
+
 
     def _extract_POS(self, pos_block:Tag)-> str | None:
         pos = pos_block.find("div", class_="pos-header dpos-h").find('span', class_='pos dpos')

@@ -39,7 +39,7 @@ class Fetcher:
             if resp.url == BASE_URL:
                 raise req.exceptions.HTTPError('word not found')
             self.html_content = resp.text
-            # Using a util to save the pages for testing purpose
+            # Using a util to save the pages for testing purposes
             # save_page(word, resp)
             return resp
 
